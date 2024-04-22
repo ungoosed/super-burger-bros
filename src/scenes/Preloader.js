@@ -33,7 +33,10 @@ export class Preloader extends Scene
         this.load.setPath('assets');
         this.load.image('qwanoes', 'qc.jpg')
         this.load.spritesheet('startButton', 'startbutton.png', {frameWidth: 32, frameHeight: 16})
-        this.load.spritesheet('hotdog', 'hotdog.png', {frameWidth: 8, frameHeight: 16})
+        this.load.spritesheet('choosePeter', 'peter-pepper-button.png', {frameWidth: 32, frameHeight: 16})
+        this.load.spritesheet('chooseSausage', 'sausage-button.png', {frameWidth: 64, frameHeight: 16})
+
+        this.load.spritesheet('sausage', 'hotdog.png', {frameWidth: 8, frameHeight: 16})
 
         this.load.image('burger', 'burger.png')
         this.load.image('pepper', 'pepper.png')

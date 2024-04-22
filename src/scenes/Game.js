@@ -26,30 +26,8 @@ export class Game extends Scene {
         );
     }
     create() {
-
         this.background = this.add.image(0, 0, 'qwanoes')
-        this.countdown = 0;
-        this.registry.set('countdown', this.countdown);
-        const countdownTimer = setInterval(() => {
-            this.countdown++;
-            if (this.countdown >= 60) {
-                clearInterval(countdownTimer)
-                clearTimeout(this.player1PepperTimeout)
-                clearTimeout(this.player2PepperTimeout)
-                clearTimeout(this.peppered1Timeout)
-                clearTimeout(this.peppered2Timeout)
-                this.scene.stop('Hud');
-                this.scene.start(
-                    'GameOver',
-                    {
-                        'player1Burgers': this.player1.burgers,
-                        'player2Burgers': this.player2.burgers,
-                    }
-                )
 
-            }
-            this.registry.set('countdown', this.countdown);
-        }, 1000)
         this.player1 = new PeterPepper(this, -20, 0, {
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.s,
@@ -100,15 +78,6 @@ export class Game extends Scene {
 
 
         })
-        this.physics.add.overlap(this.player1.sprite, this.burger, () => {
-            this.player1.burgers++
-            this.resetBurger()
-
-        })
-        this.physics.add.overlap(this.player2.sprite, this.burger, () => {
-            this.player2.burgers++
-            this.resetBurger()
-        })
 
         this.cameras.main.setBounds(-500, -500, 1000, 1000)
         this.physics.world.setBounds(-500, -500, 1000, 1000)
@@ -116,7 +85,28 @@ export class Game extends Scene {
         this.mid = new Phaser.Math.Vector2
 
         this.cameras.main.startFollow(this.mid, false, 0.05, 0.05);
+        this.countdown = 0;
+        this.registry.set('countdown', this.countdown);
+        const countdownTimer = setInterval(() => {
+            this.countdown++;
+            if (this.countdown >= 60) {
+                clearInterval(countdownTimer)
+                clearTimeout(this.player1.pepperTimeout)
+                clearTimeout(this.player2.pepperTimeout)
+                clearTimeout(this.peppered1Timeout)
+                clearTimeout(this.peppered2Timeout)
+                this.scene.stop('Hud');
+                this.scene.start(
+                    'GameOver',
+                    {
+                        'player1Burgers': this.player1.burgers,
+                        'player2Burgers': this.player2.burgers,
+                    }
+                )
 
+            }
+            this.registry.set('countdown', this.countdown);
+        }, 1000)
     }
     update() {
         this.cameraTick()

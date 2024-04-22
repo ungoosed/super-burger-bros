@@ -1,22 +1,15 @@
-export class PeterPepper {
+export class Sausage {
     constructor(scene, x, y, controls) {
-        this.scene = scene
-
-        this.name = 'peter-pepper';
+        this.name = 'sausage';
         this.jumps = 1;
         this.pepperCount = 20;
         this.burgers = 0
-
+        this.scene = scene
         this.sprite = this.scene.physics.add.sprite(x, y, 'peter-pepper', 0).setCollideWorldBounds(true).setMaxVelocity(300)
         this.pepper = this.scene.physics.add.sprite(0, 0, 'pepper').setVisible(false)
         this.pepper.body.setAllowGravity(false)
         this.pepper.body.setEnable(false)
         this.keys = this.scene.input.keyboard.addKeys(controls)
-        this.scene.physics.add.overlap(this.sprite, this.scene.burger, () => {
-            this.burgers++
-            this.scene.resetBurger()
-
-        })
     }
     update() {
         this.keys.up.onDown = () => {
@@ -52,7 +45,7 @@ export class PeterPepper {
             this.pepper.setX(this.sprite.body.position.x - 10).setY(this.sprite.body.position.y)
             this.pepper.body.setEnable(true)
             this.pepper.setVisible(true)
-            this.scene.player2PepperTimeout = setTimeout(
+            this.pepperTimeout = setTimeout(
                 () => {
                     this.pepper.setVisible(false)
                     this.pepper.body.setEnable(false)
