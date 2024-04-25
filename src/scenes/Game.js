@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { PeterPepper } from '../characters/PeterPepper';
+import { Sausage } from '../characters/Sausage';
 export class Game extends Scene {
     constructor() {
         super('Game');
@@ -27,6 +28,7 @@ export class Game extends Scene {
     }
     create() {
         this.background = this.add.image(0, 0, 'qwanoes')
+        this.burger = this.physics.add.sprite(0, 0, 'burger').setBounce(0.7).setCollideWorldBounds(true)
 
         this.player1 = new PeterPepper(this, -20, 0, {
             'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -44,7 +46,6 @@ export class Game extends Scene {
             'U': Phaser.Input.Keyboard.KeyCodes.U,
             'O': Phaser.Input.Keyboard.KeyCodes.O,
         })
-        this.burger = this.physics.add.sprite(0, 0, 'burger').setBounce(0.7).setCollideWorldBounds(true)
 
         this.tilemap = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 })
         const tileset = this.tilemap.addTilesetImage('platformTiles', 'platformTiles', 16, 16)
@@ -55,28 +56,22 @@ export class Game extends Scene {
         this.physics.add.collider(this.player2.sprite, map)
 
         this.physics.add.overlap(this.player1.sprite, this.player2.pepper, () => {
-            this.player1.sprite.disableBody();     
-            this.player1.sprite.setFrame(1)
-            this.peppered1Timeout = setTimeout(
-                () => {
-                    this.player1.sprite.setFrame(0)
-                    this.player1.sprite.enableBody();
-
-                }, 4000)
+            this.player1.peppered()
         })
+        this.physics.add.overlap(this.player2.sprite, this.burger, () => {
+            this.player2.burgers++
+            this.resetBurger()
 
+        })
+        this.physics.add.overlap(this.player1.sprite, this.burger, () => {
+            this.player1.burgers++
+            this.resetBurger()
+        })
         this.physics.add.overlap(this.player2.sprite, this.player1.pepper, () => {
-            this.player2.sprite.disableBody();
-            this.player2.sprite.setFrame(1)
-            this.peppered2Timeout = setTimeout(
-                () => {
-                    this.player2.sprite.setFrame(0)
-
-                    this.player2.sprite.enableBody();
-
-                }, 4000)
-
-
+            this.player2.peppered()
+        })
+        this.physics.add.overlap(this.player1.sprite, this.player2.sprite, () => {
+            this.player1.kill()
         })
 
         this.cameras.main.setBounds(-500, -500, 1000, 1000)
@@ -91,10 +86,6 @@ export class Game extends Scene {
             this.countdown++;
             if (this.countdown >= 60) {
                 clearInterval(countdownTimer)
-                clearTimeout(this.player1.pepperTimeout)
-                clearTimeout(this.player2.pepperTimeout)
-                clearTimeout(this.peppered1Timeout)
-                clearTimeout(this.peppered2Timeout)
                 this.scene.stop('Hud');
                 this.scene.start(
                     'GameOver',

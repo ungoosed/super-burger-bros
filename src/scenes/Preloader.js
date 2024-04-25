@@ -33,11 +33,7 @@ export class Preloader extends Scene
         this.load.setPath('assets');
         this.load.image('qwanoes', 'qc.jpg')
         this.load.spritesheet('startButton', 'startbutton.png', {frameWidth: 32, frameHeight: 16})
-        this.load.spritesheet('choosePeter', 'peter-pepper-button.png', {frameWidth: 32, frameHeight: 16})
-        this.load.spritesheet('chooseSausage', 'sausage-button.png', {frameWidth: 64, frameHeight: 16})
-
-        this.load.spritesheet('sausage', 'hotdog.png', {frameWidth: 8, frameHeight: 16})
-
+        this.load.spritesheet('sausage', 'sausage.png', {frameWidth: 8, frameHeight: 16})
         this.load.image('burger', 'burger.png')
         this.load.image('pepper', 'pepper.png')
         this.load.image('burgerlogo', 'burgerlogo.png')
@@ -48,6 +44,11 @@ export class Preloader extends Scene
         this.load.spritesheet('peter-pepper', 'peter-pepper.png',{frameWidth: 16, frameHeight: 16})
         this.load.image('player1Info', 'player1Info.png')
         this.load.image('player2Info', 'player2Info.png')
+
+        this.load.setPath('assets/buttons');
+        this.load.spritesheet('choosePeter', 'peter-pepper-button.png', {frameWidth: 32, frameHeight: 16})
+        this.load.spritesheet('chooseSausage', 'sausage-button.png', {frameWidth: 64, frameHeight: 16})
+
 
     }
 
