@@ -6,9 +6,8 @@ export class Sausage {
         this.burgers = 0
         this.scene = scene
         this.sprite = this.scene.physics.add.sprite(x, y, 'sausage', 0).setCollideWorldBounds(true).setMaxVelocity(300)
-        this.pepper = this.scene.physics.add.sprite(0, 0, 'pepper').setVisible(false)
-        this.pepper.body.setAllowGravity(false)
-        this.pepper.body.setEnable(false)
+        this.attacks = []
+
         this.keys = this.scene.input.keyboard.addKeys(controls)
         this.sprite.anims.create({
             key: 'walk',
@@ -49,16 +48,19 @@ export class Sausage {
         }
 
     }
-    peppered() {
-        if (this.stunned == false) {
-            this.sprite.anims.play('peppered', true)
-            this.stunned = true;
-            this.scene.time.addEvent({
-                delay: 4000, callback: () => {
-                    this.stunned = false;
-                }
-            })
+    overlap(name) {
+        if (name == 'pepper') {
+            if (this.stunned == false) {
+                this.sprite.anims.play('peppered', true)
+                this.stunned = true;
+                this.scene.time.addEvent({
+                    delay: 4000, callback: () => {
+                        this.stunned = false;
+                    }
+                })
+            }
         }
+
 
     }
     kill() {

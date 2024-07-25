@@ -29,24 +29,39 @@ export class Game extends Scene {
     create() {
         this.background = this.add.image(0, 0, 'qwanoes')
         this.burger = this.physics.add.sprite(0, 0, 'burger').setBounce(0.7).setCollideWorldBounds(true)
-
-        this.player1 = new PeterPepper(this, -20, 0, {
+        let player1keys = {
             'up': Phaser.Input.Keyboard.KeyCodes.W,
             'down': Phaser.Input.Keyboard.KeyCodes.s,
             'left': Phaser.Input.Keyboard.KeyCodes.A,
             'right': Phaser.Input.Keyboard.KeyCodes.D,
             'U': Phaser.Input.Keyboard.KeyCodes.Q,
             'O': Phaser.Input.Keyboard.KeyCodes.E,
-        })
-        this.player2 = new PeterPepper(this, 20, 0, {
+        }
+        let player2keys = {
             'up': Phaser.Input.Keyboard.KeyCodes.I,
             'down': Phaser.Input.Keyboard.KeyCodes.K,
             'left': Phaser.Input.Keyboard.KeyCodes.J,
             'right': Phaser.Input.Keyboard.KeyCodes.L,
             'U': Phaser.Input.Keyboard.KeyCodes.U,
             'O': Phaser.Input.Keyboard.KeyCodes.O,
-        })
+        }
+        console.log(this.registry.get('player1name'))
+        console.log(this.registry.get('player2name'))
 
+        if (this.registry.get('player1name') == 'peter-pepper') {
+            this.player1 = new PeterPepper(this, -20, 0, player1keys, this.player2)
+        }
+        if (this.registry.get('player1name') == 'sausage') {
+            this.player1 = new Sausage(this, -20, 0, player1keys, this.player2)
+
+        }
+        if (this.registry.get('player2name') == 'peter-pepper') {
+            this.player2 = new PeterPepper(this, -20, 0, player2keys, this.player1)
+        }
+        if (this.registry.get('player2name') == 'sausage') {
+            this.player2 = new Sausage(this, -20, 0, player2keys, this.player1)
+
+        }
         this.tilemap = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 })
         const tileset = this.tilemap.addTilesetImage('platformTiles', 'platformTiles', 16, 16)
         const map = this.tilemap.createLayer('collide', tileset).setCollisionBetween(1, 4)
@@ -55,24 +70,33 @@ export class Game extends Scene {
         this.physics.add.collider(this.player1.sprite, map)
         this.physics.add.collider(this.player2.sprite, map)
 
-        this.physics.add.overlap(this.player1.sprite, this.player2.pepper, () => {
-            this.player1.peppered()
-        })
+
         this.physics.add.overlap(this.player2.sprite, this.burger, () => {
             this.player2.burgers++
             this.resetBurger()
-
         })
         this.physics.add.overlap(this.player1.sprite, this.burger, () => {
             this.player1.burgers++
             this.resetBurger()
         })
-        this.physics.add.overlap(this.player2.sprite, this.player1.pepper, () => {
-            this.player2.peppered()
-        })
+
+        for (let i = 0; i < this.player1.attacks.length; i++) {
+            this.physics.add.overlap(this.player2.sprite, this.player1.attacks[0].sprite, () => {
+                this.player2.overlap(this.player1.attacks[0].name)
+            })
+        }
+        for (let i = 0; i < this.player2.attacks.length; i++) {
+            this.physics.add.overlap(this.player1.sprite, this.player2.attacks[i].sprite, () => {
+                this.player1.overlap(this.player2.attacks[i].name)
+            })
+        }
+
         this.physics.add.overlap(this.player1.sprite, this.player2.sprite, () => {
-            this.player1.kill()
+            this.player1.overlap(this.player2.name)
+            this.player2.overlap(this.player1.name)
         })
+
+
 
         this.cameras.main.setBounds(-500, -500, 1000, 1000)
         this.physics.world.setBounds(-500, -500, 1000, 1000)

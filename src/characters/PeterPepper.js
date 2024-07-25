@@ -1,11 +1,13 @@
 export class PeterPepper {
-    constructor(scene, x, y, controls) {
+    constructor(scene, x, y, controls, opponent) {
         this.scene = scene
 
+        this.opponent = opponent;
         this.stunned = false
         this.name = 'peter-pepper';
         this.jumps = 1;
         this.lives = 5;
+
 
         this.pepperCount = 20;
         this.burgers = 0
@@ -14,6 +16,8 @@ export class PeterPepper {
         this.pepper = this.scene.physics.add.sprite(0, 0, 'pepper').setVisible(false)
         this.pepper.body.setAllowGravity(false)
         this.pepper.body.setEnable(false)
+        this.attacks = [{name: 'pepper', sprite: this.pepper}]
+
         this.keys = this.scene.input.keyboard.addKeys(controls)
         this.sprite.anims.create({
             key: 'walk',
@@ -28,6 +32,7 @@ export class PeterPepper {
             repeat: -1
         });
     }
+
     update() {
         if ((this.stunned == true) || (!this.keys.left.isDown && !this.keys.right.isDown)) {
             this.sprite.body.setVelocityX(this.sprite.body.velocity.x / 1.2)
@@ -77,18 +82,23 @@ export class PeterPepper {
             })
         }
     }
-    peppered() {
-        if (this.stunned == false) {
-            this.sprite.anims.play('peppered', true)
-            this.stunned = true;
-            this.scene.time.addEvent({
-                delay: 4000, callback: () => {
-                    this.stunned = false;
-                }
-            })
+    overlap(name) {
+        if (name == 'pepper') {
+            if (this.stunned == false) {
+                this.sprite.anims.play('peppered', true)
+                this.stunned = true;
+                this.scene.time.addEvent({
+                    delay: 4000, callback: () => {
+                        this.stunned = false;
+                    }
+                })
+            }
         }
-
+        if(name=='sausage') {
+            this.kill()
+        }
     }
+
     kill() {
         if(this.lives <= 0) {
             this.stunned == false;

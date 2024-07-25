@@ -1,8 +1,8 @@
 import { Scene } from 'phaser';
 
-export class ChooseCharacter extends Scene {
+export class ChooseArena extends Scene {
     constructor() {
-        super('ChooseCharacter');
+        super('ChooseArena');
     }
 
     create() {
